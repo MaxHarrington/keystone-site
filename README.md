@@ -1,0 +1,1 @@
+Unified  repository for self-hosted blog site, featuring full commenting functionality, support for email updates, and replication of subscriber-like features.

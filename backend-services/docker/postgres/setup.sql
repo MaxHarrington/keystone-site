@@ -1,0 +1,3 @@
+CREATE DATABASE keycloak;
+CREATE DATABASE keystone;
+CREATE DATABASE grafana;

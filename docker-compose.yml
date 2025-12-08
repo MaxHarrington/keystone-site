@@ -62,24 +62,24 @@ services:
       - keycloak
       - redstack-backend-service
     command: npm run next:dev
-    working_dir: /home/node/redstack-frontend-service
+    working_dir: /home/node/frontend-services
     network_mode: "host"
     # Used only in local development for testing authentication
     volumes:
-      - ../../../frontend-services:/home/node/frontend-services
+      - ../../frontend-services:/home/node/frontend-services
     environment:
       - DEPLOYMENT_FRAMEWORK=nextjs
       - NEXTJS_SECRET=O4bBIfdlB6Wx5Q3d9uaFirBxXs8rJI3d
-  redstack-backend-service:
+  keystone-service:
     image: node:22.8-alpine
     # restart: unless-stopped
     depends_on:
       - keycloak
     command: npm run dev
-    working_dir: /home/node/backend-services
+    working_dir: /home/node/keystone-services
     # Used only in local development for testing authentication
     volumes:
-      - ../../../redstack-backend-services:/home/node/redstack-backend-services
+      - ../../keystone-services:/home/node/keystone-services
 #      - images-data:/home/node/backend-services/public/images
     environment:
       - DEPLOYMENT_FRAMEWORK=keystone

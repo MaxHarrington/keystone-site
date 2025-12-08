@@ -3,7 +3,7 @@ import Link from 'next/link'
 import {UserIcon} from '@heroicons/react/24/solid'
 
 export default function Poster({poster}: { poster: any }) {
-    return (<div className='grid mx-auto w-[280px] md:w-[400px] lg:w-[480px]'>
+    return <div className='grid mx-auto w-[280px] md:w-[400px] lg:w-[480px]'>
             <Link className='m-auto flex flex-row' href={`/content/posters/${poster.slug}`}>
                 <div className='m-auto'>
                     {
@@ -34,5 +34,5 @@ export default function Poster({poster}: { poster: any }) {
                     </div>
                 </div>
             </Link>
-        </div>)
+        </div>
 }

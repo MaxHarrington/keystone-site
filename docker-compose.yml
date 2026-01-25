@@ -9,7 +9,7 @@ services:
     # Used only in development
     network_mode: "host"
     volumes:
-      - ./caddy:/etc/caddy
+      - ./services/caddy:/etc/caddy
       - caddy-data:/data
   postgres:
     image: postgres:15.7-alpine3.20
@@ -22,7 +22,7 @@ services:
       - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data/
-      - ./postgres/setup.sql:/docker-entrypoint-initdb.d/setup.sql
+      - ./services/postgres/setup.sql:/docker-entrypoint-initdb.d/setup.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U docker"]
       interval: 10s
@@ -47,39 +47,39 @@ services:
       KEYCLOAK_ADMIN: keycloak
       KEYCLOAK_ADMIN_PASSWORD: keycloak
     volumes:
-      - ./keycloak/login/:/opt/keycloak/themes/ljn/login
-      - ./keycloak/account/:/opt/keycloak/themes/ljn/account
+      - ./services/keycloak/login/:/opt/keycloak/themes/ljn/login
+      - ./services/keycloak/account/:/opt/keycloak/themes/ljn/account
 #    INSTALL CURL IN CUSTOM IMAGE THAT I HAVE TO BUILD OUT
 #    healthcheck:
 #        test: [ "CMD", "curl", "-f", "http://localhost:9000/health/ready" ]
 #        interval: 15s
 #        timeout: 2s
 #        retries: 15
-  redstack-frontend-service:
+  nextjs:
     image: node:22.8-alpine
     # restart: unless-stopped
     depends_on:
       - keycloak
-      - redstack-backend-service
+      - keystone
     command: npm run next:dev
     working_dir: /home/node/frontend-services
     network_mode: "host"
     # Used only in local development for testing authentication
     volumes:
-      - ../../frontend-services:/home/node/frontend-services
+      - ./next:/home/node/next
     environment:
       - DEPLOYMENT_FRAMEWORK=nextjs
       - NEXTJS_SECRET=O4bBIfdlB6Wx5Q3d9uaFirBxXs8rJI3d
-  keystone-service:
+  keystone:
     image: node:22.8-alpine
     # restart: unless-stopped
     depends_on:
       - keycloak
     command: npm run dev
-    working_dir: /home/node/keystone-services
+    working_dir: /home/node/keystone
     # Used only in local development for testing authentication
     volumes:
-      - ../../keystone-services:/home/node/keystone-services
+      - ./keystone:/home/node/keystone
 #      - images-data:/home/node/backend-services/public/images
     environment:
       - DEPLOYMENT_FRAMEWORK=keystone

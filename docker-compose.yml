@@ -9,7 +9,7 @@ services:
     # Used only in development
     network_mode: "host"
     volumes:
-      - ./services/caddy:/etc/caddy
+      - ./caddy:/etc/caddy
       - caddy-data:/data
   postgres:
     image: postgres:15.7-alpine3.20
@@ -22,75 +22,55 @@ services:
       - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data/
-      - ./services/postgres/setup.sql:/docker-entrypoint-initdb.d/setup.sql
+      - ./setup.sql:/docker-entrypoint-initdb.d/setup.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U docker"]
       interval: 10s
       timeout: 5s
       retries: 10
-  keycloak:
-    image: keycloak/keycloak:25.0.2
-    depends_on:
-      - postgres
+  pocket-id:
+    image: ghcr.io/pocket-id/pocket-id:v2
     restart: unless-stopped
-    command: start-dev
+    env_file: frontend.example.env
     ports:
-      - "8080:8080"
-    environment:
-      KC_HTTP_ENABLED: true
-      KC_PROXY_HEADERS: xforwarded
-      KC_DB: postgres
-      KC_DB_USERNAME: docker
-      KC_DB_PASSWORD: docker
-      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
-      KC_HEALTH_ENABLED: true
-      KEYCLOAK_ADMIN: keycloak
-      KEYCLOAK_ADMIN_PASSWORD: keycloak
+      - "1411:1411"
     volumes:
-      - ./services/keycloak/login/:/opt/keycloak/themes/ljn/login
-      - ./services/keycloak/account/:/opt/keycloak/themes/ljn/account
-#    INSTALL CURL IN CUSTOM IMAGE THAT I HAVE TO BUILD OUT
-#    healthcheck:
-#        test: [ "CMD", "curl", "-f", "http://localhost:9000/health/ready" ]
-#        interval: 15s
-#        timeout: 2s
-#        retries: 15
-  nextjs:
+      - "./pocket-id:/app/data"
+    healthcheck:
+      test: [ "CMD", "/app/pocket-id", "healthcheck" ]
+      interval: 1m30s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+  backend:
     image: node:22.8-alpine
     # restart: unless-stopped
     depends_on:
-      - keycloak
-      - keystone
-    command: npm run next:dev
-    working_dir: /home/node/frontend-services
-    network_mode: "host"
-    # Used only in local development for testing authentication
-    volumes:
-      - ./next:/home/node/next
-    environment:
-      - DEPLOYMENT_FRAMEWORK=nextjs
-      - NEXTJS_SECRET=O4bBIfdlB6Wx5Q3d9uaFirBxXs8rJI3d
-  keystone:
-    image: node:22.8-alpine
-    # restart: unless-stopped
-    depends_on:
-      - keycloak
+      - pocket-id
     command: npm run dev
+    env_file: frontend.example.env
     working_dir: /home/node/keystone
-    # Used only in local development for testing authentication
     volumes:
       - ./keystone:/home/node/keystone
 #      - images-data:/home/node/backend-services/public/images
-    environment:
-      - DEPLOYMENT_FRAMEWORK=keystone
-      - KEYSTONE_SECRET=JuT2zK3duy5JaWog24VG0irM1xEIKoMI
+  frontend:
+    image: node:22.8-alpine
+    # restart: unless-stopped
+    depends_on:
+      - pocket-id
+      - backend
+    command: npm run next:dev
+    env_file: frontend.example.env
+    working_dir: /home/node/frontend-services
+    volumes:
+      - ./next:/home/node/next
 volumes:
   db-data:
     labels:
-      redstack.description: "Database volume for all data needed to run stack"
+      stack.description: "Database volume for all data needed to run stack"
   images-data:
     labels:
-      redstack.description: "Folder for storing images from Keystone's upload feature"
+      stack.description: "Folder for storing images from Keystone's upload feature"
   caddy-data:
     labels:
-      redstack.description: "Live data needed for storing and restoring certificates"
+      stack.description: "Live data needed for storing and restoring certificates"

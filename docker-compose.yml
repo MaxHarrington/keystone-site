@@ -28,20 +28,15 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-  pocket-id:
-    image: ghcr.io/pocket-id/pocket-id:v2
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
     restart: unless-stopped
-    env_file: frontend.example.env
+    env_file: keycloak/.env
     ports:
-      - "1411:1411"
-    volumes:
-      - "./pocket-id:/app/data"
-    healthcheck:
-      test: [ "CMD", "/app/pocket-id", "healthcheck" ]
-      interval: 1m30s
-      timeout: 5s
-      retries: 2
-      start_period: 10s
+      - "8080:8080"
+  oauth2-proxy:
+    image: quay.io/oauth2-proxy/oauth2-proxy:latest
+    env_file: oauth2-proxy/.env
   backend:
     image: node:22.8-alpine
     # restart: unless-stopped

@@ -3,7 +3,10 @@
     respond <<HTML
 		<html>
 			<head><title>Services not running...</title></head>
-			<body><style>p { text-align: center; margin-top: 40vh; font-size: 32px; }</style><p>Something is down, please wait 30 seconds and then refresh...</p></body>
+			<body>
+				<style>p { text-align: center; margin-top: 40vh; font-size: 32px; }</style>
+				<p>Something is down, please wait 30 seconds and then refresh...</p>
+			</body>
 		</html>
 		HTML 503
 }

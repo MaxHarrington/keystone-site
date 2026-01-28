@@ -2,6 +2,8 @@ import {NextRequest, NextResponse} from 'next/server';
 import {frontend, keystone, login} from "@constants";
 import {cookies} from "next/headers";
 
+// TODO: REPLACE WITH OAUTH2 PROXY
+
 // All imports must be from only the supported 'edge' libraries, so we rewrite several things here.
 // Beginning an auth session will always start here, as it will grab and pass along the URL to our backend.
 

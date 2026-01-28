@@ -7,6 +7,8 @@ import {logger} from './logger';
 import {parse, serialize} from "cookie";
 import {slugifyOptions} from "./schema";
 
+// TODO: REPLACE WITH OAUTH2 PROXY
+
 interface tokenSet {
     'access_token': string,
     'expires_in': number,

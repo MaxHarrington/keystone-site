@@ -27,6 +27,15 @@ localhost:3000 {
 
 # Keystone Manager
 localhost:3100 {
+	forward_auth localhost:4180 {
+		uri /oauth2
+		header_up X-Real-IP {remote_host}
+
+		@error status 401
+		handle_response @error {
+		   redir * /oauth2/sign_in?rd={scheme}://localhost:3200{uri}
+	   }
+	}
 	handle {
 		reverse_proxy :4100 :9999 {
 			lb_policy first

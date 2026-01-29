@@ -32,16 +32,21 @@ services:
     image: quay.io/keycloak/keycloak:latest
     restart: unless-stopped
     env_file: keycloak/.env
+    command: start-dev
+    depends_on:
+      - postgres
     ports:
       - "8080:8080"
   oauth2-proxy:
     image: quay.io/oauth2-proxy/oauth2-proxy:latest
     env_file: oauth2-proxy/.env
+    depends_on:
+      - keycloak
   backend:
     image: node:22.8-alpine
     # restart: unless-stopped
     depends_on:
-      - pocket-id
+      - oauth2-proxy
     command: npm run dev
     env_file: frontend.example.env
     working_dir: /home/node/keystone
@@ -52,7 +57,7 @@ services:
     image: node:22.8-alpine
     # restart: unless-stopped
     depends_on:
-      - pocket-id
+      - oauth2-proxy
       - backend
     command: npm run next:dev
     env_file: frontend.example.env

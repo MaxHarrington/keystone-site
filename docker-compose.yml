@@ -42,16 +42,21 @@ services:
     env_file: oauth2-proxy/.env
     depends_on:
       - keycloak
+    command: --config /oauth2-proxy.cfg
+    environment:
+      - OAUTH2_PROXY_SKIP_PROVIDER_BUTTON=true
+    volumes:
+      - ./oauth2-proxy/oauth2-proxy.cfg:/oauth2-proxy.cfg
   backend:
     image: node:22.8-alpine
     # restart: unless-stopped
     depends_on:
       - oauth2-proxy
     command: npm run dev
-    env_file: frontend.example.env
+    env_file: ./backend/.env
     working_dir: /home/node/keystone
     volumes:
-      - ./keystone:/home/node/keystone
+      - ./keystone:/home/node/keystone s
 #      - images-data:/home/node/backend-services/public/images
   frontend:
     image: node:22.8-alpine
@@ -60,7 +65,7 @@ services:
       - oauth2-proxy
       - backend
     command: npm run next:dev
-    env_file: frontend.example.env
+    env_file: ./frontend/.env
     working_dir: /home/node/frontend-services
     volumes:
       - ./next:/home/node/next

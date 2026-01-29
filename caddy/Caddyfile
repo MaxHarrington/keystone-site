@@ -38,3 +38,17 @@ localhost:3100 {
 		}
 	}
 }
+
+# Keycloak
+localhost:3200 {
+	handle {
+		reverse_proxy :8080 :9999 {
+			lb_policy first
+			lb_try_duration 1s
+			fail_duration 5s
+			transport http {
+				dial_timeout 500ms
+			}
+		}
+	}
+}

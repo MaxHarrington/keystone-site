@@ -27,8 +27,8 @@ localhost:3000 {
 
 # Keystone Manager
 localhost:3100 {
-	handle /oauth2/* {
-		reverse_proxy localhost:4180 {
+	handle /* {
+		reverse_proxy localhost:4100 {
 			 header_up X-Real-IP {remote_host}
 			 header_up X-Forwarded-Uri {uri}
 	 	}
@@ -36,7 +36,7 @@ localhost:3100 {
 
 	handle {
 			forward_auth localhost:4180 {
-			uri /oauth2
+			uri /
 			header_up X-Real-IP {remote_host}
 
 			@error status 401
@@ -45,15 +45,6 @@ localhost:3100 {
 		   }
 		}
    	}
-
-	reverse_proxy :4100 :9999 {
-		lb_policy first
-		lb_try_duration 1s
-		fail_duration 5s
-		transport http {
-			dial_timeout 500ms
-		}
-	}
 }
 
 # Keycloak

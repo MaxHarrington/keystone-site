@@ -27,13 +27,19 @@ localhost:3000 {
 
 # Keystone Manager
 localhost:3100 {
+	handle /oauth2/* {
+		reverse_proxy localhost:4180 {
+			 header_up X-Real-IP {remote_host}
+			 header_up X-Forwarded-Uri {uri}
+	 	}
+	 }
 	forward_auth localhost:4180 {
 		uri /oauth2
 		header_up X-Real-IP {remote_host}
 
 		@error status 401
 		handle_response @error {
-		   redir * /oauth2/sign_in?rd={scheme}://localhost:3200{uri}
+		   redir * /oauth2/sign_in?rd={scheme}://{host}{uri}
 	   }
 	}
 	handle {

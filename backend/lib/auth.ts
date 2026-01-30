@@ -9,15 +9,31 @@ export const keycloakSessionStrategy = {
     get: async function ({context}: { context: Context }): Promise<User | null> {
         if (!context.req || !context.res) return null;
         if (context.req.headers.authorization === 'anonymous') return null;
-        const userId = context.req?.headers['x-auth-request-user'];
-        if (typeof userId != 'string') return null;
-        console.log(userId)
+        const id = context.req?.headers['x-auth-request-user'];
+        const groups = context.req.headers['x-auth-request-groups'];
+        if (typeof id != 'string' || typeof groups != 'string') return null;
+        const split = groups.split(',')
+        const admin = split.includes('role:admin');
+        const poster = split.includes('role:poster');
+        const community = split.includes('role:community');
         const user = await context.sudo().db.User.findOne({
             where: {
-                id: userId,
+                id
             }
         });
         if (!user) return null;
+        if (admin != user.admin || poster != user.poster || community != user.community) {
+            context.sudo().db.User.updateOne({
+                where: {
+                    id
+                },
+                data: {
+                    admin,
+                    community,
+                    poster
+                }
+            })
+        }
         return user;
     },
 
@@ -25,7 +41,12 @@ export const keycloakSessionStrategy = {
         if (!context.req || !context.res) return null;
         const id = context.req?.headers['x-auth-request-user'];
         const name = context.req?.headers['x-auth-request-preferred-username'];
-        if (typeof id != 'string' || typeof name != 'string') return null;
+        const groups = context.req.headers['x-auth-request-groups'];
+        if (typeof id != 'string' || typeof name != 'string' || typeof groups != 'string') return null;
+        const split = groups.split(',')
+        const admin = split.includes('role:admin');
+        const poster = split.includes('role:poster');
+        const community = split.includes('role:community');
         const user = await context.db.User.findOne({
             where: {
                 id,
@@ -35,7 +56,10 @@ export const keycloakSessionStrategy = {
             await context.sudo().prisma.user.create({
                 data: {
                     id,
-                    name
+                    name,
+                    admin,
+                    poster,
+                    community,
                 }
             })
         }

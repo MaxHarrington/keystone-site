@@ -1,5 +1,5 @@
 import {list} from '@keystone-6/core';
-import {relationship, select, text} from '@keystone-6/core/fields';
+import {checkbox, relationship, select, text} from '@keystone-6/core/fields';
 import {
     canViewUser,
     hasSession,
@@ -26,6 +26,12 @@ export const User = list({
             }, validation: {
                 isRequired: true
             }
+        }), admin: checkbox({
+            isFilterable: true
+        }), poster: checkbox({
+            isFilterable: true
+        }), community: checkbox({
+            isFilterable: true
         }), updates: select({
             options: [{
                 label: 'Unsubscribed; only system emails.', value: 'unsubscribed'

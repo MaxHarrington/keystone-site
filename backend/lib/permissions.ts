@@ -1,22 +1,23 @@
-import type {Image, Post, Poster, Token, Comment} from "@prisma/client";
+import type {Image, Post, Poster, User, Comment} from "@prisma/client";
 
-export function hasSession({session}: { session?: Token }) {
+export function hasSession({session}: { session?: User }) {
     return Boolean(session?.id);
 }
 
-export function sessionIsCommunity({session}: { session?: Token }) {
+export function sessionIsCommunity({session}: { session?: User }) {
     return Boolean(session?.community);
 }
 
-export function sessionIsPoster({session}: { session?: Token }) {
+export function sessionIsPoster({session}: { session?: User }) {
+    console.log(session);
     return Boolean(session?.poster);
 }
 
-export function sessionIsAdmin({session}: { session?: Token }) {
-    return Boolean(session?.manager);
+export function sessionIsAdmin({session}: { session?: User }) {
+    return Boolean(session?.admin);
 }
 
-export function canViewToken({session}: { session?: Token }) {
+export function canViewToken({session}: { session?: User }) {
     if (sessionIsAdmin({session})) {
         return true;
     } else if (session?.id) {
@@ -26,17 +27,17 @@ export function canViewToken({session}: { session?: Token }) {
     } else return false;
 }
 
-export function canViewUser({session}: { session?: Token }) {
+export function canViewUser({session}: { session?: User }) {
     if (sessionIsAdmin({session})) {
         return true;
     } else if (session?.id) {
         return {
-            id: { equals: session.userId }
+            id: { equals: session.id }
         };
     } else return false;
 }
 
-export function canViewPost({session}: { session?: Token }) {
+export function canViewPost({session}: { session?: User }) {
     if (sessionIsPoster({session})) {
         return true;
     } else if (sessionIsCommunity({session})) {
@@ -59,7 +60,7 @@ export function canViewPost({session}: { session?: Token }) {
     }
 }
 
-export function canViewComment({session}: { session?: Token }) {
+export function canViewComment({session}: { session?: User }) {
     if (sessionIsPoster({session})) {
         return true;
     } else if (sessionIsCommunity({session})) {
@@ -84,22 +85,22 @@ export function canViewComment({session}: { session?: Token }) {
     }
 }
 
-export function canUpdatePost({session, item}: { session?: Token, item: Post }) {
+export function canUpdatePost({session, item}: { session?: User, item: Post }) {
     if (!session) return false;
     return (item.posterId === session.id || sessionIsAdmin({session}));
 }
 
-export function canUpdateComment({session, item}: { session?: Token, item: Comment }) {
+export function canUpdateComment({session, item}: { session?: User, item: Comment }) {
     if (!session) return false;
     return (item.userId === session.id || sessionIsAdmin({session}));
 }
 
-export function canUpdatePoster({session, item}: { session?: Token, item: Poster }) {
+export function canUpdatePoster({session, item}: { session?: User, item: Poster }) {
     if (!session) return false;
     return (item.id === session.id || sessionIsAdmin({session}));
 }
 
-export function canUpdateImage({session, item}: { session?: Token, item: Image }) {
+export function canUpdateImage({session, item}: { session?: User, item: Image }) {
     if (!session) return false;
     return (item.uploaderId === session.id || sessionIsAdmin({session}));
 }

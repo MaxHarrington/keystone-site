@@ -127,6 +127,9 @@ model Poster {
 model User {
   id            String    @id
   name          String    @default("")
+  admin         Boolean   @default(false)
+  poster        Boolean   @default(false)
+  community     Boolean   @default(false)
   updates       String    @default("periodically")
   liked         Post[]    @relation("Post_likes")
   comments      Comment[] @relation("Comment_user")

@@ -44,12 +44,6 @@ export const User = list({
             }, ui: {
                 displayMode: 'radio'
             }, isFilterable: true
-        }), tokens: relationship({
-            many: true, ref: 'Token.user', ui: {
-                description: 'Keycloak Token sessions linked to this User.', hideCreate: true, itemView: {
-                    fieldMode: 'read'
-                }
-            }
         }), liked: relationship({
             ref: 'Post.likes', many: true, ui: {
                 hideCreate: true, itemView: {

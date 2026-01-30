@@ -665,8 +665,6 @@ type User {
   name: String
   email: String
   updates: String
-  tokens(where: TokenWhereInput! = {}, orderBy: [TokenOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TokenWhereUniqueInput): [Token!]
-  tokensCount(where: TokenWhereInput! = {}): Int
   liked(where: PostWhereInput! = {}, orderBy: [PostOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PostWhereUniqueInput): [Post!]
   likedCount(where: PostWhereInput! = {}): Int
   comments(where: CommentWhereInput! = {}, orderBy: [CommentOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: CommentWhereUniqueInput): [Comment!]
@@ -689,17 +687,10 @@ input UserWhereInput {
   name: StringFilter
   email: StringFilter
   updates: StringFilter
-  tokens: TokenManyRelationFilter
   liked: PostManyRelationFilter
   comments: CommentManyRelationFilter
   likedComments: CommentManyRelationFilter
   flags: CommentManyRelationFilter
-}
-
-input TokenManyRelationFilter {
-  every: TokenWhereInput
-  some: TokenWhereInput
-  none: TokenWhereInput
 }
 
 input UserOrderByInput {
@@ -713,18 +704,10 @@ input UserUpdateInput {
   name: String
   email: String
   updates: String
-  tokens: TokenRelateToManyForUpdateInput
   liked: PostRelateToManyForUpdateInput
   comments: CommentRelateToManyForUpdateInput
   likedComments: CommentRelateToManyForUpdateInput
   flags: CommentRelateToManyForUpdateInput
-}
-
-input TokenRelateToManyForUpdateInput {
-  disconnect: [TokenWhereUniqueInput!]
-  set: [TokenWhereUniqueInput!]
-  create: [TokenCreateInput!]
-  connect: [TokenWhereUniqueInput!]
 }
 
 input UserUpdateArgs {
@@ -736,96 +719,10 @@ input UserCreateInput {
   name: String
   email: String
   updates: String
-  tokens: TokenRelateToManyForCreateInput
   liked: PostRelateToManyForCreateInput
   comments: CommentRelateToManyForCreateInput
   likedComments: CommentRelateToManyForCreateInput
   flags: CommentRelateToManyForCreateInput
-}
-
-input TokenRelateToManyForCreateInput {
-  create: [TokenCreateInput!]
-  connect: [TokenWhereUniqueInput!]
-}
-
-type Token {
-  id: ID!
-  manager: Boolean
-  community: Boolean
-  poster: Boolean
-  access: String
-  refresh: String
-  accessExpiry: DateTime
-  expiry: DateTime
-  user: User
-}
-
-input TokenWhereUniqueInput {
-  id: ID
-}
-
-input TokenWhereInput {
-  AND: [TokenWhereInput!]
-  OR: [TokenWhereInput!]
-  NOT: [TokenWhereInput!]
-  id: IDFilter
-  manager: BooleanFilter
-  community: BooleanFilter
-  poster: BooleanFilter
-  access: StringFilter
-  refresh: StringFilter
-  accessExpiry: DateTimeFilter
-  expiry: DateTimeFilter
-  user: UserWhereInput
-}
-
-input DateTimeFilter {
-  equals: DateTime
-  in: [DateTime!]
-  notIn: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  gt: DateTime
-  gte: DateTime
-  not: DateTimeFilter
-}
-
-input TokenOrderByInput {
-  id: OrderDirection
-  manager: OrderDirection
-  community: OrderDirection
-  poster: OrderDirection
-  access: OrderDirection
-  refresh: OrderDirection
-  accessExpiry: OrderDirection
-  expiry: OrderDirection
-}
-
-input TokenUpdateInput {
-  manager: Boolean
-  community: Boolean
-  poster: Boolean
-  access: String
-  refresh: String
-  accessExpiry: DateTime
-  expiry: DateTime
-  user: UserRelateToOneForUpdateInput
-}
-
-input TokenUpdateArgs {
-  where: TokenWhereUniqueInput!
-  data: TokenUpdateInput!
-}
-
-input TokenCreateInput {
-  manager: Boolean
-  community: Boolean
-  poster: Boolean
-  access: String
-  refresh: String
-  accessExpiry: DateTime
-  expiry: DateTime
-  user: UserRelateToOneForCreateInput
 }
 
 """
@@ -876,14 +773,7 @@ type Mutation {
   updateUsers(data: [UserUpdateArgs!]!): [User]
   deleteUser(where: UserWhereUniqueInput!): User
   deleteUsers(where: [UserWhereUniqueInput!]!): [User]
-  createToken(data: TokenCreateInput!): Token
-  createTokens(data: [TokenCreateInput!]!): [Token]
-  updateToken(where: TokenWhereUniqueInput!, data: TokenUpdateInput!): Token
-  updateTokens(data: [TokenUpdateArgs!]!): [Token]
-  deleteToken(where: TokenWhereUniqueInput!): Token
-  deleteTokens(where: [TokenWhereUniqueInput!]!): [Token]
   endSession: Boolean!
-  startSession: Token
 }
 
 type Query {
@@ -908,11 +798,7 @@ type Query {
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
   usersCount(where: UserWhereInput! = {}): Int
-  token(where: TokenWhereUniqueInput!): Token
-  tokens(where: TokenWhereInput! = {}, orderBy: [TokenOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TokenWhereUniqueInput): [Token!]
-  tokensCount(where: TokenWhereInput! = {}): Int
   keystone: KeystoneMeta!
-  getSession: Token
 }
 
 type KeystoneMeta {

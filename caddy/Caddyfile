@@ -1,6 +1,6 @@
 :9999 {
 	header Content-Type text/html
-    respond <<HTML
+	respond <<HTML
 		<html>
 			<head><title>Services not running...</title></head>
 			<body>
@@ -14,49 +14,53 @@
 # NextJS Frontend
 localhost:3000 {
 	handle {
-		reverse_proxy :4000 :9999 {
-			lb_policy first
-			lb_try_duration 1s
-			fail_duration 5s
-			transport http {
-				dial_timeout 500ms
-			}
+	   reverse_proxy :4000 :9999 {
+		 lb_policy first
+		 lb_try_duration 1s
+		 fail_duration 5s
+		 transport http {
+			dial_timeout 500ms
 		}
-	}
+	 }
+   }
 }
 
 # Keystone Manager
 localhost:3100 {
-	handle /* {
-		reverse_proxy localhost:4100 {
-			 header_up X-Real-IP {remote_host}
-			 header_up X-Forwarded-Uri {uri}
-	 	}
-	 }
+	handle /oauth2/* {
+		 reverse_proxy localhost:4180 {
+			  header_up X-Real-IP {remote_host}
+			  header_up X-Forwarded-Uri {uri}
+		 }
+	}
 
 	handle {
-			forward_auth localhost:4180 {
-			uri /
+	   forward_auth localhost:4180 {
+		   uri /oauth2/auth
+		   header_up X-Real-IP {remote_host}
+		   copy_headers X-Auth-Request-User X-Auth-Request-Email
+		   @error status 401
+		   handle_response @error {
+			  redir * /oauth2/sign_in?rd={scheme}://{host}{uri}
+		  }
+	   }
+	   reverse_proxy localhost:4100 {
 			header_up X-Real-IP {remote_host}
-
-			@error status 401
-			handle_response @error {
-			   redir * /oauth2/sign_in?rd={scheme}://{host}{uri}
-		   }
+			header_up X-Forwarded-Uri {uri}
 		}
-   	}
+   }
 }
 
 # Keycloak
 localhost:3200 {
 	handle {
-		reverse_proxy :8080 :9999 {
-			lb_policy first
-			lb_try_duration 1s
-			fail_duration 5s
-			transport http {
-				dial_timeout 500ms
-			}
+	   reverse_proxy :8080 :9999 {
+		 lb_policy first
+		 lb_try_duration 1s
+		 fail_duration 5s
+		 transport http {
+			dial_timeout 500ms
 		}
-	}
+	 }
+   }
 }

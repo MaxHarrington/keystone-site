@@ -11,57 +11,38 @@ import {lists} from './lib/schema';
 export default config<TypeInfo>({
     db: {
         provider: 'postgresql', url: String(process.env.DATABASE_URL), prismaClientPath: './node_modules/.prisma/client'
-    }, lists, graphql: {
-        extendGraphqlSchema: graphql.extend(base => {
-            return {
-                query: {
-                    // TODO: Referrer should match only the local host
-                    getSession: graphql.field({
-                        type: base.object('Token'), async resolve(source, {}, context: Context) {
-                            return await session.get({context});
-                        }
-                    })
-                }, mutation: {
-                    // TODO: Referrer should match only the local host
-                    startSession: graphql.field({
-                        type: base.object('Token'), async resolve(source, {}, context: Context) {
-                            return await session.start({context});
-                        }
-                    })
-                }
-            };
-        })
-    }, ui: {
+    }, lists, ui: {
         isAccessAllowed: async (context) => {
-            return sessionIsPoster({
-                session: await session.get({context})
-                    ?? await session.start({context})
-                    ?? undefined
-            });
+            // return sessionIsPoster({
+            //     session: await session.get({context})
+            //         ?? await session.start({context})
+            //         ?? undefined
+            // });
+            return true;
         }, pageMiddleware: async ({wasAccessAllowed, context}) => {
-            const url = new URL(`${keystone}${context.req?.url}`);
-            const hadCode = url.searchParams.has('code')
-                || url.searchParams.has('session_state')
-                || url.searchParams.has('iss');
-            if (hadCode) {
-                url.searchParams.delete('code');
-                url.searchParams.delete('session_state');
-                url.searchParams.delete('iss');
-            }
-            if (!wasAccessAllowed) {
-                logger.child({
-                    wasAccessAllowed, hadCode, session: context.session
-                }).warn('Access denied');
-                if (context.session) {
-                    return {
-                        kind: 'redirect', to: frontend
-                    };
-                } else return {
-                    kind: 'redirect', to: `${login}${keystone}${url.pathname}`
-                };
-            } else if (hadCode) return {
-                kind: 'redirect', to: `${url.pathname}${url.search}`
-            }
+            // const url = new URL(`${keystone}${context.req?.url}`);
+            // const hadCode = url.searchParams.has('code')
+            //     || url.searchParams.has('session_state')
+            //     || url.searchParams.has('iss');
+            // if (hadCode) {
+            //     url.searchParams.delete('code');
+            //     url.searchParams.delete('session_state');
+            //     url.searchParams.delete('iss');
+            // }
+            // if (!wasAccessAllowed) {
+            //     logger.child({
+            //         wasAccessAllowed, hadCode, session: context.session
+            //     }).warn('Access denied');
+            //     if (context.session) {
+            //         return {
+            //             kind: 'redirect', to: frontend
+            //         };
+            //     } else return {
+            //         kind: 'redirect', to: `${login}${keystone}${url.pathname}`
+            //     };
+            // } else if (hadCode) return {
+            //     kind: 'redirect', to: `${url.pathname}${url.search}`
+            // }
         },
     }, session, storage: {
         local_images: {

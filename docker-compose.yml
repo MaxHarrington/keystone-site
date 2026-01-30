@@ -46,12 +46,27 @@ services:
     environment:
       - OAUTH2_PROXY_SKIP_PROVIDER_BUTTON=true
     volumes:
-      - ./oauth2-proxy/oauth2-proxy-backend.cfg:/oauth2-proxy.cfg
+      - ./oauth2-proxy/backend/oauth2-proxy.cfg:/oauth2-proxy.cfg
     # Used only in development
     network_mode: "host"
     # Used only in prod
   #    ports:
 #     - "4180:4180/tcp"
+  oauth2-proxy-frontend:
+    image: quay.io/oauth2-proxy/oauth2-proxy:latest
+    env_file: oauth2-proxy/.env
+    depends_on:
+      - keycloak
+    command: --config /oauth2-proxy.cfg
+    environment:
+      - OAUTH2_PROXY_SKIP_PROVIDER_BUTTON=true
+    volumes:
+      - ./oauth2-proxy/frontend/oauth2-proxy.cfg:/oauth2-proxy.cfg
+    # Used only in development
+    network_mode: "host"
+    # Used only in prod
+    #    ports:
+  #     - "4180:4180/tcp"
   backend:
     image: node:22.8-alpine
     # restart: unless-stopped
@@ -67,7 +82,7 @@ services:
     image: node:22.8-alpine
     # restart: unless-stopped
     depends_on:
-      - oauth2-proxy
+      - oauth2-proxy-frontend
       - backend
     command: npm run next:dev
     env_file: ./frontend/.env

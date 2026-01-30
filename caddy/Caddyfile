@@ -13,15 +13,35 @@
 
 # NextJS Frontend
 localhost:3000 {
-	handle {
-	   reverse_proxy :4000 :9999 {
-		 lb_policy first
-		 lb_try_duration 1s
-		 fail_duration 5s
-		 transport http {
-			dial_timeout 500ms
+	handle /oauth2/* {
+		 reverse_proxy localhost:4181 {
+			  header_up X-Real-IP {remote_host}
+			  header_up X-Forwarded-Uri {uri}
+		 }
+	}
+
+	handle /account {
+	   forward_auth localhost:4181 {
+		   uri /oauth2/auth
+		   header_up X-Real-IP {remote_host}
+		   copy_headers X-Auth-Request-User X-Auth-Request-Email X-Auth-Request-Preferred-Username X-Auth-Request-Groups
+
+		   @error status 401
+		   handle_response @error {
+			  redir * /oauth2/sign_in?rd={scheme}://{host}{uri}
+		  }
+	   }
+
+		reverse_proxy localhost:4100 {
+			header_up X-Real-IP {remote_host}
+			header_up X-Forwarded-Uri {uri}
+			lb_policy first
+			lb_try_duration 1s
+			fail_duration 5s
+			transport http {
+				dial_timeout 500ms
+			}
 		}
-	 }
    }
 }
 

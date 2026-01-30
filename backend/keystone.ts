@@ -13,12 +13,11 @@ export default config<TypeInfo>({
         provider: 'postgresql', url: String(process.env.DATABASE_URL), prismaClientPath: './node_modules/.prisma/client'
     }, lists, ui: {
         isAccessAllowed: async (context) => {
-            // return sessionIsPoster({
-            //     session: await session.get({context})
-            //         ?? await session.start({context})
-            //         ?? undefined
-            // });
-            return true;
+            return sessionIsPoster({
+                session: await session.get({context})
+                    ?? await session.start({context})
+                    ?? undefined
+            });
         }, pageMiddleware: async ({wasAccessAllowed, context}) => {
             // const url = new URL(`${keystone}${context.req?.url}`);
             // const hadCode = url.searchParams.has('code')

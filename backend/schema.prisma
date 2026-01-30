@@ -127,7 +127,6 @@ model Poster {
 model User {
   id            String    @id
   name          String    @default("")
-  email         String    @default("")
   updates       String    @default("periodically")
   liked         Post[]    @relation("Post_likes")
   comments      Comment[] @relation("Comment_user")

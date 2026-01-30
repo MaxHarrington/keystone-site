@@ -26,12 +26,6 @@ export const User = list({
             }, validation: {
                 isRequired: true
             }
-        }), email: text({
-            validation: {isRequired: true}, isFilterable: true, ui: {
-                itemView: {
-                    fieldMode: 'read', fieldPosition: 'sidebar'
-                }
-            }
         }), updates: select({
             options: [{
                 label: 'Unsubscribed; only system emails.', value: 'unsubscribed'

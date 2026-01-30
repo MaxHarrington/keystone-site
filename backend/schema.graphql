@@ -663,7 +663,6 @@ input ImageRelateToManyForCreateInput {
 type User {
   id: ID!
   name: String
-  email: String
   updates: String
   liked(where: PostWhereInput! = {}, orderBy: [PostOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PostWhereUniqueInput): [Post!]
   likedCount(where: PostWhereInput! = {}): Int
@@ -685,7 +684,6 @@ input UserWhereInput {
   NOT: [UserWhereInput!]
   id: IDFilter
   name: StringFilter
-  email: StringFilter
   updates: StringFilter
   liked: PostManyRelationFilter
   comments: CommentManyRelationFilter
@@ -696,13 +694,11 @@ input UserWhereInput {
 input UserOrderByInput {
   id: OrderDirection
   name: OrderDirection
-  email: OrderDirection
   updates: OrderDirection
 }
 
 input UserUpdateInput {
   name: String
-  email: String
   updates: String
   liked: PostRelateToManyForUpdateInput
   comments: CommentRelateToManyForUpdateInput
@@ -717,7 +713,6 @@ input UserUpdateArgs {
 
 input UserCreateInput {
   name: String
-  email: String
   updates: String
   liked: PostRelateToManyForCreateInput
   comments: CommentRelateToManyForCreateInput

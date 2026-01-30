@@ -1,7 +1,6 @@
 import slugify from 'slugify';
 import type {Context} from '.keystone/types';
 import {User} from '@prisma/client';
-import {keycloak, keystone} from "./constants";
 import {logger} from './logger';
 import {parse, serialize} from "cookie";
 
@@ -68,7 +67,5 @@ export const keycloakSessionStrategy = {
 
     end: async function ({context}: { context: Context }): Promise<void> {
         if (!context.req || !context.res) return;
-        if (context.req.headers.authorization === 'anonymous') return;
-
     },
 };

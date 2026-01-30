@@ -9,7 +9,6 @@ export function sessionIsCommunity({session}: { session?: User }) {
 }
 
 export function sessionIsPoster({session}: { session?: User }) {
-    console.log(session);
     return Boolean(session?.poster);
 }
 

@@ -73,5 +73,7 @@ export const keycloakSessionStrategy = {
 
     end: async function ({context}: { context: Context }): Promise<void> {
         if (!context.req || !context.res) return;
+        context.res.setHeader('location', '/oauth2/sign-out');
+        context.res.statusCode = 302;
     },
 };

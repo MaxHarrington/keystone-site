@@ -10,18 +10,25 @@ import {lists} from './lib/schema';
 
 export default config<TypeInfo>({
     db: {
-        provider: 'postgresql', url: String(process.env.DATABASE_URL), prismaClientPath: './node_modules/.prisma/client'
-    }, lists, ui: {
+        provider: 'postgresql',
+        url: String(process.env.DATABASE_URL),
+        prismaClientPath: './node_modules/.prisma/client'
+    },
+    lists,
+    ui: {
         isAccessAllowed: async (context) => {
             return sessionIsPoster({ session: context.session });
-        }, pageMiddleware: async ({wasAccessAllowed, context}) => {
-
-        },
-    }, session, storage: {
+        }
+    },
+    session,
+    storage: {
         local_images: {
-            kind: 'local', type: 'image', generateUrl: path => `${keystone}/images${path}`, serverRoute: {
+            kind: 'local',
+            type: 'image', generateUrl: path => `${keystone}/images${path}`,
+            serverRoute: {
                 path: '/images',
-            }, storagePath: 'public/images',
+            },
+            storagePath: 'public/images',
         }
     }
 })

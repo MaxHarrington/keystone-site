@@ -24,7 +24,8 @@ localhost:3000 {
 	   forward_auth localhost:4181 {
 		   uri /oauth2/auth
 		   header_up X-Real-IP {remote_host}
-		   copy_headers X-Auth-Request-User X-Auth-Request-Email X-Auth-Request-Preferred-Username X-Auth-Request-Groups
+		   copy_headers X-Auth-Request-User X-Auth-Request-Email
+		   copy_headers X-Auth-Request-Preferred-Username X-Auth-Request-Groups
 
 		   @error status 401
 		   handle_response @error {
@@ -69,7 +70,8 @@ localhost:3100 {
 	   forward_auth localhost:4180 {
 		   uri /oauth2/auth
 		   header_up X-Real-IP {remote_host}
-		   copy_headers X-Auth-Request-User X-Auth-Request-Email X-Auth-Request-Preferred-Username X-Auth-Request-Groups
+		   copy_headers X-Auth-Request-User X-Auth-Request-Email
+		   copy_headers X-Auth-Request-Preferred-Username X-Auth-Request-Groups
 
 		   @error status 401
 		   handle_response @error {

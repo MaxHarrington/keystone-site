@@ -12,16 +12,51 @@
 }
 
 # NextJS Frontend
-localhost:3000 {
+{$FRONTEND_URL} {
 	handle /oauth2/* {
-		 reverse_proxy localhost:4181 {
+		 reverse_proxy {$OAUTH2_PROXY_FRONTEND_INTERNAL_URL} {
+			  header_up X-Real-IP {remote_host}
+			  header_up X-Forwarded-Uri {uri}
+		 }
+	}
+
+	handle {
+		forward_auth {$OAUTH2_PROXY_FRONTEND_INTERNAL_URL} {
+           uri /oauth2/auth
+           header_up X-Real-IP {remote_host}
+           copy_headers X-Auth-Request-User X-Auth-Request-Email X-Auth-Request-Access-Token
+           copy_headers X-Auth-Request-Preferred-Username X-Auth-Request-Groups
+
+           @error status 401
+           handle_response @error {
+              redir * /oauth2/sign_in?rd={scheme}://{host}{uri}
+          }
+       }
+
+       reverse_proxy {$FRONTEND_INTERNAL_URL} {
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-Uri {uri}
+            lb_policy first
+            lb_try_duration 1s
+            fail_duration 5s
+            transport http {
+                dial_timeout 500ms
+            }
+       }
+	}
+}
+
+# Keystone Manager
+{$BACKEND_URL} {
+	handle /oauth2/* {
+		 reverse_proxy {$OAUTH2_PROXY_BACKEND_INTERNAL_URL} {
 			  header_up X-Real-IP {remote_host}
 			  header_up X-Forwarded-Uri {uri}
 		 }
 	}
 
 	handle /account {
-	   forward_auth localhost:4181 {
+	   forward_auth {$OAUTH2_PROXY_BACKEND_INTERNAL_URL} {
 		   uri /oauth2/auth
 		   header_up X-Real-IP {remote_host}
 		   copy_headers X-Auth-Request-User X-Auth-Request-Email
@@ -33,7 +68,7 @@ localhost:3000 {
 		  }
 	   }
 
-		reverse_proxy localhost:4000 {
+		reverse_proxy {$BACKEND_INTERNAL_URL} {
 			header_up X-Real-IP {remote_host}
 			header_up X-Forwarded-Uri {uri}
 			lb_policy first
@@ -45,57 +80,22 @@ localhost:3000 {
 		}
    }
 
-   reverse_proxy localhost:4000 {
-   			header_up X-Real-IP {remote_host}
-   			header_up X-Forwarded-Uri {uri}
-   			lb_policy first
-   			lb_try_duration 1s
-   			fail_duration 5s
-   			transport http {
-   				dial_timeout 500ms
-   			}
-   }
-}
-
-# Keystone Manager
-localhost:3100 {
-	handle /oauth2/* {
-		 reverse_proxy localhost:4180 {
-			  header_up X-Real-IP {remote_host}
-			  header_up X-Forwarded-Uri {uri}
-		 }
-	}
-
-	handle {
-	   forward_auth localhost:4180 {
-		   uri /oauth2/auth
-		   header_up X-Real-IP {remote_host}
-		   copy_headers X-Auth-Request-User X-Auth-Request-Email
-		   copy_headers X-Auth-Request-Preferred-Username X-Auth-Request-Groups
-
-		   @error status 401
-		   handle_response @error {
-			  redir * /oauth2/sign_in?rd={scheme}://{host}{uri}
-		  }
-	   }
-
-		reverse_proxy localhost:4100 {
-			header_up X-Real-IP {remote_host}
-			header_up X-Forwarded-Uri {uri}
-			lb_policy first
-			lb_try_duration 1s
-			fail_duration 5s
-			transport http {
-				dial_timeout 500ms
-			}
-		}
-   }
+   reverse_proxy {$BACKEND_INTERNAL_URL} {
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-Uri {uri}
+        lb_policy first
+        lb_try_duration 1s
+        fail_duration 5s
+        transport http {
+            dial_timeout 500ms
+        }
+    }
 }
 
 # Keycloak
-localhost:3200 {
+{$KEYCLOAK_URL} {
 	handle {
-	   reverse_proxy :8080 :9999 {
+	   reverse_proxy {$KEYCLOAK_INTERNAL_URL} :9999 {
 		 lb_policy first
 		 lb_try_duration 1s
 		 fail_duration 5s

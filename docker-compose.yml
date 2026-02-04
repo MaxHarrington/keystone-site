@@ -2,6 +2,8 @@ services:
   caddy:
     image: caddy:2.8.4-alpine
     restart: unless-stopped
+    env_file:
+      - caddy/.env
     # ports:
     # Used only in production
     #   - 80:80
@@ -84,7 +86,7 @@ services:
     depends_on:
       - oauth2-proxy-frontend
       - backend
-    command: npm run next:dev
+    command: npm run dev
     env_file: ./frontend/.env
     working_dir: /home/node/frontend
     volumes:

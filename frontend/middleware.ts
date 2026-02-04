@@ -8,35 +8,35 @@ import {cookies} from "next/headers";
 // Beginning an auth session will always start here, as it will grab and pass along the URL to our backend.
 
 export async function middleware(request: NextRequest) {
-    const cookieJar = await cookies();
-    const identity = cookieJar.get('Identity')?.value;
-    if (identity) await refreshSession();
-    const url = new URL(request.url);
-    const protectedPaths = ['/account'];
-    let response: NextResponse;
-    const hasCode = (url.searchParams.has('code')
-        && url.searchParams.has('iss')
-        && url.searchParams.has('session_state'));
-    if (hasCode) {
-        const token = await startSession(request,
-            `${frontend}${url.pathname === '/' ? '' : url.pathname}`);
-        response = NextResponse.redirect(`${frontend}${url.pathname}`);
-        if (token?.id && token?.expiry) response.cookies.set({
-            name: 'Identity',
-            value: token.id,
-            path: '/',
-            expires: new Date(token.expiry),
-            secure: process.env.NODE_ENV === "production",
-            httpOnly: true,
-            sameSite: 'strict'
-        });
-    } else if (protectedPaths.includes(url.pathname)) {
-        const session = await getSession();
-        response = !session
-            ? NextResponse.redirect(`${login}${frontend}${url.pathname}`)
-            : response = NextResponse.next();
-    } else response = NextResponse.next();
-    return response;
+    // const cookieJar = await cookies();
+    // const identity = cookieJar.get('Identity')?.value;
+    // if (identity) await refreshSession();
+    // const url = new URL(request.url);
+    // const protectedPaths = ['/account'];
+    // let response: NextResponse;
+    // const hasCode = (url.searchParams.has('code')
+    //     && url.searchParams.has('iss')
+    //     && url.searchParams.has('session_state'));
+    // if (hasCode) {
+    //     const token = await startSession(request,
+    //         `${frontend}${url.pathname === '/' ? '' : url.pathname}`);
+    //     response = NextResponse.redirect(`${frontend}${url.pathname}`);
+    //     if (token?.id && token?.expiry) response.cookies.set({
+    //         name: 'Identity',
+    //         value: token.id,
+    //         path: '/',
+    //         expires: new Date(token.expiry),
+    //         secure: process.env.NODE_ENV === "production",
+    //         httpOnly: true,
+    //         sameSite: 'strict'
+    //     });
+    // } else if (protectedPaths.includes(url.pathname)) {
+    //     const session = await getSession();
+    //     response = !session
+    //         ? NextResponse.redirect(`${login}${frontend}${url.pathname}`)
+    //         : response = NextResponse.next();
+    // } else response = NextResponse.next();
+    // return response;
 }
 
 export default async function getSession(): Promise<Token | undefined> {

@@ -9,12 +9,24 @@ export default async function getSession(): Promise<Token | undefined> {
     const headersList = await headers();
     const authorization = headersList.get('X-Auth-Request-Access-Token');
     const URL = `${keystone}/api/graphql`;
+    if (!authorization) return;
     const result = await fetch(URL, {
         method: 'POST', body: JSON.stringify({
-            query: gql`query User($where: UserWhereUniqueInput!) {
-                user(where: $where) {
-                    id
+            query: gql`query GetSession {
+              getSession {
+                id
+                user {
+                  id
+                  name
+                  email
+                  updates
+                  tokensCount
                 }
+                expiry
+                community
+                manager
+                poster
+              }
             }`
         }), headers: {
             'Authorization': `Bearer ${authorization}`, 'Content-Type': 'application/json'

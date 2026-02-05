@@ -55,7 +55,27 @@
 		 }
 	}
 
-	handle /account {
+	handle /api/graphql {
+		forward_auth {$OAUTH2_PROXY_BACKEND_INTERNAL_URL} {
+           uri /oauth2/auth
+           header_up X-Real-IP {remote_host}
+           copy_headers X-Auth-Request-User X-Auth-Request-Email
+           copy_headers X-Auth-Request-Preferred-Username X-Auth-Request-Groups
+       }
+
+       reverse_proxy {$BACKEND_INTERNAL_URL} {
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-Uri {uri}
+            lb_policy first
+            lb_try_duration 1s
+            fail_duration 5s
+            transport http {
+                dial_timeout 500ms
+            }
+        }
+	}
+
+	handle {
 	   forward_auth {$OAUTH2_PROXY_BACKEND_INTERNAL_URL} {
 		   uri /oauth2/auth
 		   header_up X-Real-IP {remote_host}

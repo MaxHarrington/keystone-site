@@ -15,6 +15,19 @@ export default config<TypeInfo>({
         prismaClientPath: './node_modules/.prisma/client'
     },
     lists,
+    graphql: {
+        extendGraphqlSchema: graphql.extend(base => {
+            return {
+                query: {
+                    getSession: graphql.field({
+                        type: base.object('User'), async resolve(source, {}, context: Context) {
+                            return await context.session;
+                        }
+                    })
+                }
+            }
+        })
+    },
     ui: {
         isAccessAllowed: async (context) => {
             return sessionIsPoster({ session: context.session });

@@ -15,16 +15,10 @@ export default async function getSession(): Promise<Token | undefined> {
             query: gql`query GetSession {
               getSession {
                 id
-                user {
-                  id
-                  name
-                  email
-                  updates
-                  tokensCount
-                }
-                expiry
+                name
+                updates
+                admin
                 community
-                manager
                 poster
               }
             }`
@@ -44,7 +38,5 @@ export default async function getSession(): Promise<Token | undefined> {
             logger.error(err.code)
             return err.code;
         });
-    console.log(result);
-    return;
-    // return result?.data.getSession ?? result;
+    return result?.data.getSession ?? result;
 }

@@ -7,7 +7,6 @@ export const keycloakSessionStrategy = {
         if (!context.req || !context.res) return null;
         if (context.req.headers.authorization === 'anonymous') return null;
         const id = context.req?.headers['x-auth-request-user'];
-        console.log(id)
         if (typeof id != 'string') return null;
         const user = await context.sudo().db.User.findOne({
             where: {

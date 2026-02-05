@@ -1,4 +1,4 @@
-import {cookies} from "next/headers";
+import {headers} from "next/headers";
 import {logger} from "@logger";
 import {keystone} from "@constants";
 
@@ -7,13 +7,13 @@ export const gql = ([content]: TemplateStringsArray) => content;
 export async function API({query, variables}: {
     query: string, variables?: Record<string, any>
 }) {
-    const cookieJar = await cookies();
-    const authorization = cookieJar.get('Identity')?.value;
+    const headersList = await headers();
+    const authorization = headersList.get('X-Auth-Request-Access-Token');
     const URL = `${keystone}/api/graphql`;
+    if (!authorization) return;
     return fetch(URL, {
         method: 'POST', body: JSON.stringify({query, variables}), headers: {
-            'Authorization': authorization ?? 'anonymous',
-            'Content-Type': 'application/json'
+            'Authorization': `Bearer ${authorization}`, 'Content-Type': 'application/json'
         }
     })
         .then(async (payload) => {

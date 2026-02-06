@@ -3,7 +3,7 @@ import 'dotenv/config';
 import {config, graphql} from '@keystone-6/core';
 import type {Context, TypeInfo} from '.keystone/types';
 import {keycloakSessionStrategy as session} from "./lib/auth";
-import {frontend, keystone, login} from "./lib/constants";
+import {frontend, keystone} from "./lib/constants";
 import {sessionIsPoster} from "./lib/permissions";
 import {logger} from "./lib/logger";
 import {lists} from './lib/schema';
@@ -31,6 +31,16 @@ export default config<TypeInfo>({
     ui: {
         isAccessAllowed: async (context) => {
             return sessionIsPoster({ session: context.session });
+        },
+        pageMiddleware: async ({wasAccessAllowed, context}) => {
+            if (!wasAccessAllowed) {
+                logger.child({
+                    wasAccessAllowed, session: context.session
+                }).warn('Access denied');
+                return {
+                    kind: 'redirect', to: frontend
+                };
+            }
         }
     },
     session,

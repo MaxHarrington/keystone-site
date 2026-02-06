@@ -3,7 +3,7 @@ import type {Viewport} from 'next';
 import Link from 'next/link';
 import getSession from "@/components/actions/getSession";
 import Sites from "@/services/Sites";
-import {frontend, login, navigation} from "@constants";
+import {frontend, navigation} from "@constants";
 import {sans, serif} from '@fonts';
 import type { Metadata } from 'next'
 import '@/app/globals.css';

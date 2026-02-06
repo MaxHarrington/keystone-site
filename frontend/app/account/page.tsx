@@ -6,12 +6,9 @@ import DropdownMenu from "@/components/interface/DropdownMenu";
 export default async function AccountManager() {
     const session = await getSession();
     let name: string = 'Invalid username';
-    let expiry: string = 'Invalid expiry date';
     let updates: string = 'Invalid update value';
-    if (typeof session?.user?.name === 'string') name = session.user.name;
-    if (typeof session?.user?.updates === 'string') updates = session.user.updates;
-    if (typeof session?.expiry === 'string') expiry =
-        `${new Date(session.expiry).toDateString()} at ${new Date(session.expiry).toTimeString()}`;
+    if (typeof session?.name === 'string') name = session.name;
+    if (typeof session?.updates === 'string') updates = session.updates;
     return <>
         <main className={`flex flex-col lg:max-w-[50%] h-[70vh] lg:ml-auto lg:mr-[8%] mt-16`}>
             <DropdownMenu session={session} />
@@ -24,9 +21,6 @@ export default async function AccountManager() {
                 {/*<Form action={}>*/}
 
                 {/*</Form>*/}
-            </div>
-            <div className={`text-center`}>
-                You&apos;re logged in on here until {expiry}.
             </div>
         </main>
     </>

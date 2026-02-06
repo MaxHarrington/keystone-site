@@ -1,11 +1,11 @@
 "use server"
 
-import {gql, Token} from "@/services/API";
-import {cookies, headers} from "next/headers";
+import {gql, User} from "@/services/API";
+import {headers} from "next/headers";
 import {logger} from "@logger";
 import {keystone} from "@constants";
 
-export default async function getSession(): Promise<Token | undefined> {
+export default async function getSession(): Promise<User | undefined> {
     const headersList = await headers();
     const authorization = headersList.get('X-Auth-Request-Access-Token');
     const URL = `${keystone}/api/graphql`;

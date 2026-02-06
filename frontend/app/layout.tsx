@@ -30,26 +30,23 @@ export default async function Layout({children}: { children: ReactNode }) {
     const session = await getSession();
     const {title, tagline, description} = await Sites.initialize();
     let name: string = 'Invalid username';
-    if (typeof session?.user?.name === 'string') name = session.user.name.toUpperCase();
+    if (typeof session?.name === 'string') name = session.name.toUpperCase();
     return <>
         <html lang="en">
         <body className={'bg-[#a82f21]'}>
         <div className={`grid h-screen w-[99.999%] overscroll-contain text-red-50`}>
             <div className={`flex flex-row place-content-between w-[94%] mx-auto mt-5`}>
                 <Link className={`${serif.className}`} href="/">
-                    { title === 'Conjonctures'
-                    ? <>
-                            <div className={`text-5xl lg:text-[3.4rem] mb-1.5`}>
-                                <i className={`text-amber-400 mr-1`}>con</i>
-                                <i className={`font-medium text-red-50 mr-1`}>jonc</i>
-                                <i className={`text-amber-400`}>tures</i>
-                            </div>
-                            <div className={`${sans.className} mt-2 place-content-start lg:mt-2 text-[1rem] font-medium lg:ml-32 text-red-100`}>
-                                /kɔ̃.ʒɔ̃k.tyʁ/ — French noun (pl., fem.)
-                            </div>
-                        </>
-                    : <div>{title}</div>
-                    }
+                    <>
+                        <div className={`text-5xl lg:text-[3.4rem] mb-1.5`}>
+                            <i className={`text-amber-400 mr-1`}>con</i>
+                            <i className={`font-medium text-red-50 mr-1`}>jonc</i>
+                            <i className={`text-amber-400`}>tures</i>
+                        </div>
+                        <div className={`${sans.className} mt-2 place-content-start lg:mt-2 text-[1rem] font-medium lg:ml-32 text-red-100`}>
+                            /kɔ̃.ʒɔ̃k.tyʁ/ — French noun (pl., fem.)
+                        </div>
+                    </>
                     <div className={`${sans.className} hidden md:inline text-[1.125rem] ml-1 text-red-50`}>
                         {tagline}
                     </div>

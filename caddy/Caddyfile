@@ -20,7 +20,7 @@
 		 }
 	}
 
-	handle {
+	handle /account {
 		forward_auth {$OAUTH2_PROXY_FRONTEND_INTERNAL_URL} {
            uri /oauth2/auth
            header_up X-Real-IP {remote_host}
@@ -31,19 +31,70 @@
            handle_response @error {
               redir * /oauth2/sign_in?rd={scheme}://{host}{uri}
           }
-       }
 
-       reverse_proxy {$FRONTEND_INTERNAL_URL} {
-            header_up X-Real-IP {remote_host}
-            header_up X-Forwarded-Uri {uri}
-            lb_policy first
-            lb_try_duration 1s
-            fail_duration 5s
-            transport http {
-                dial_timeout 500ms
-            }
+          @good status 202
+           handle_response @good {
+            reverse_proxy {$FRONTEND_INTERNAL_URL} :9999 {
+	            header_up X-Real-IP {remote_host}
+	            header_up X-Forwarded-Uri {uri}
+	            lb_policy first
+	            lb_try_duration 1s
+	            fail_duration 5s
+	            transport http {
+	                dial_timeout 500ms
+	            }
+	       }
        }
+   }
 	}
+
+	handle {
+        forward_auth {$OAUTH2_PROXY_FRONTEND_INTERNAL_URL} {
+           uri /oauth2/auth
+           header_up X-Real-IP {remote_host}
+           copy_headers X-Auth-Request-User X-Auth-Request-Email X-Auth-Request-Access-Token
+           copy_headers X-Auth-Request-Preferred-Username X-Auth-Request-Groups
+
+           @error status 401
+           handle_response @error {
+              reverse_proxy {$FRONTEND_INTERNAL_URL} :9999 {
+              header_up X-Real-IP {remote_host}
+              header_up X-Forwarded-Uri {uri}
+              lb_policy first
+              lb_try_duration 1s
+              fail_duration 5s
+              transport http {
+                  dial_timeout 500ms
+              }
+            }
+            }
+
+          @good status 202
+          handle_response @good {
+            reverse_proxy {$FRONTEND_INTERNAL_URL} :9999 {
+              header_up X-Real-IP {remote_host}
+              header_up X-Forwarded-Uri {uri}
+              lb_policy first
+              lb_try_duration 1s
+              fail_duration 5s
+              transport http {
+                  dial_timeout 500ms
+              }
+            }
+          }
+       }
+    }
+
+    reverse_proxy {$FRONTEND_INTERNAL_URL} :9999 {
+      header_up X-Real-IP {remote_host}
+      header_up X-Forwarded-Uri {uri}
+      lb_policy first
+      lb_try_duration 1s
+      fail_duration 5s
+      transport http {
+          dial_timeout 500ms
+      }
+    }
 }
 
 # Keystone Manager
@@ -55,24 +106,41 @@
 		 }
 	}
 
-	handle /api/graphql {
-		forward_auth {$OAUTH2_PROXY_BACKEND_INTERNAL_URL} {
-           uri /oauth2/auth
-           header_up X-Real-IP {remote_host}
-           copy_headers X-Auth-Request-User X-Auth-Request-Email
-           copy_headers X-Auth-Request-Preferred-Username X-Auth-Request-Groups
-       }
+		handle /api/graphql {
+			forward_auth {$OAUTH2_PROXY_BACKEND_INTERNAL_URL} {
+				uri /oauth2/auth
+				header_up X-Real-IP {remote_host}
+				copy_headers X-Auth-Request-User X-Auth-Request-Email
+				copy_headers X-Auth-Request-Preferred-Username X-Auth-Request-Groups
 
-       reverse_proxy {$BACKEND_INTERNAL_URL} {
-            header_up X-Real-IP {remote_host}
-            header_up X-Forwarded-Uri {uri}
-            lb_policy first
-            lb_try_duration 1s
-            fail_duration 5s
-            transport http {
-                dial_timeout 500ms
-            }
-        }
+		        @error status 401
+				handle_response @error {
+					 reverse_proxy {$BACKEND_INTERNAL_URL} {
+						header_up X-Real-IP {remote_host}
+						header_up X-Forwarded-Uri {uri}
+						lb_policy first
+						lb_try_duration 1s
+						fail_duration 5s
+						transport http {
+						  dial_timeout 500ms
+						}
+					}
+				}
+
+				@good status 202
+				handle_response @good {
+				reverse_proxy {$BACKEND_INTERNAL_URL} {
+					header_up X-Real-IP {remote_host}
+					header_up X-Forwarded-Uri {uri}
+					lb_policy first
+					lb_try_duration 1s
+					fail_duration 5s
+					transport http {
+						dial_timeout 500ms
+					}
+				}
+			}
+		}
 	}
 
 	handle {
@@ -101,15 +169,15 @@
    }
 
    reverse_proxy {$BACKEND_INTERNAL_URL} {
-        header_up X-Real-IP {remote_host}
-        header_up X-Forwarded-Uri {uri}
-        lb_policy first
-        lb_try_duration 1s
-        fail_duration 5s
-        transport http {
-            dial_timeout 500ms
-        }
-    }
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-Uri {uri}
+		lb_policy first
+		lb_try_duration 1s
+		fail_duration 5s
+		transport http {
+			dial_timeout 500ms
+		}
+	}
 }
 
 # Keycloak

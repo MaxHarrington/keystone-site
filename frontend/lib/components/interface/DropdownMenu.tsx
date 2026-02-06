@@ -15,9 +15,9 @@ import {
 } from '@heroicons/react/24/solid'
 import {keystone, navigation} from '@constants';
 import {sans, serif} from '@fonts'
-import {Token} from "@/services/API";
+import {User} from "@/services/API";
 
-export default function DropdownMenu({session}: { session?: Token }) {
+export default function DropdownMenu({session}: { session?: User }) {
     const className = `flex flex-row px-5 py-3 border rounded-xl 
         hover:border-red-700 hover:delay-100 hover:duration-100 hover:transition-all hover:ease-in-out 
         border-transparent hover:cursor-pointer hover:bg-red-600 hover:shadow-inner`;

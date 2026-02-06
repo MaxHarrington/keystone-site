@@ -10,7 +10,6 @@ export async function API({query, variables}: {
     const headersList = await headers();
     const authorization = headersList.get('X-Auth-Request-Access-Token');
     const URL = `${keystone}/api/graphql`;
-    if (!authorization) return;
     return fetch(URL, {
         method: 'POST', body: JSON.stringify({query, variables}), headers: {
             'Authorization': `Bearer ${authorization}`, 'Content-Type': 'application/json'
@@ -113,7 +112,9 @@ export type User = {
     name?: string,
     email?: string,
     updates?: string,
-    tokensCount?: number,
+    community?: boolean,
+    poster?: boolean,
+    admin?: boolean,
 };
 
 export type Token = {

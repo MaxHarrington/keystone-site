@@ -1,5 +1,5 @@
 export const discourse = process.env.FORUM_URL ?? 'https://localhost:3000';
-export const keystone = process.env.ADMIN_URL ?? 'https://localhost:3100';
+export const keystone = process.env.ADMIN_URL ?? 'https://backend.localhost';
 export const frontend = process.env.PUBLIC_URL ?? 'https://localhost:3000';
 export const keycloak = `${process.env.KEYCLOAK_URL}/realms/${process.env.KEYCLOAK_REALM}`;
 export const navigation = {

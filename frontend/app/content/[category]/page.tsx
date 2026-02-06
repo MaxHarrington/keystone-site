@@ -32,12 +32,12 @@ export default async function ContentList({params, searchParams}:
     const {category}: {category: string} = await params;
     const {t}: {t: string} = await searchParams;
     let take: number = Number(t);
-    if (typeof take === 'undefined' || isNaN(take)) take = 12;
+    if (typeof take === 'undefined' || isNaN(take) || take > 20000) take = 12;
     if (category === 'posts') {
         const {posts} = await Posts.initialize({take});
         const {total} = await Posts.initialize({take: 20000});
         return <main>
-            <div className="flex flex-col gap-y-8 md:gap-y-9 lg:gap-y-10 mt-10 mb-8">
+            <div className="flex flex-col gap-y-8 md:gap-y-9 lg:gap-y-10 lg:ml-[8%] xl:ml-[20%] mt-10 mb-8">
                 {posts?.map((post: PostType) => {
                     return <Post
                         key={post.slug}

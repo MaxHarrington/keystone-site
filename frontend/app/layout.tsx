@@ -57,7 +57,7 @@ export default async function Layout({children}: { children: ReactNode }) {
                         text-red-600 shadow-inner w-[55px] h-[55px] rounded-full bg-white text-3xl font-medium`}>
                             {name.at(0)}
                         </Link>
-                        : <Link href={login + frontend} className={`px-5 py-4 rounded-lg bg-red-500 
+                        : <Link href={"/oauth2/start"} className={`px-5 py-4 rounded-lg bg-red-500 
                             border-2 shadow-lg border-red-300 hover:bg-red-600 ${sans.className} font-medium 
                             hidden lg:flex flex-row text-xl`}>
                             Sign In

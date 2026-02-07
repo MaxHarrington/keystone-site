@@ -23,7 +23,7 @@ export default function CommentEditor({comment}: {comment?: Comment}) {
         Number(Number(100 * (1 - (realText?.length / 600))).toFixed(0));
     const editorButton = `${serif.className} h-10 w-10 bg-red-600 hover:bg-red-700 
     rounded-md shadow-inner border-2 border-red-700`;
-    return <form className={`grid md:max-w-[60vw] mx-auto my-16 border-2 md:border-red-300 md:rounded-xl md:shadow-lg`}>
+    return <form className={`grid md:max-w-[60vw] mx-auto my-16 border-2 border-red-400 md:rounded-xl md:shadow-lg`}>
         <div className={`bg-red-500 md:rounded-t-xl text-2xl px-4 py-2 flex flex-row gap-x-3.5`}>
             <button type={'button'} onClick={boldText} className={`${editorButton} font-extrabold`}>
                 <b>B</b>
@@ -57,13 +57,13 @@ export default function CommentEditor({comment}: {comment?: Comment}) {
                 setRealText(event.currentTarget.innerText);
             }}
         />
-        <div className={'absolute grid mt-[16.4rem] mr-auto ml-[88%] md:ml-[54%] lg:ml-[56%] text-black'}>
+        <div className={'absolute grid mt-[16.4rem] mr-auto ml-[86%] md:ml-[54%] lg:ml-[56%] text-black'}>
             <div
                 className={`bg-[conic-gradient(from_180deg,var(--tw-gradient-stops))] 
                 from-transparent via-transparent ${percentParameters[percentLength]}
                 to-[0%] border-5 rounded-full h-[38px] w-[38px]`}
             >
-                <div className="text-center text-xs pt-2 bg-red-50 w-[31px] h-[31px] rounded-full mx-auto ml-[3.3px] mt-[3.1px]">
+                <div className="text-center text-xs pt-2 bg-red-50 w-[31px] h-[31px] rounded-full mx-auto ml-[3.82px] mt-[3.15px]">
                     {/* Empty string char code is equal to 10, sets length properly */}
                     {realText.charCodeAt(0) === 10 ? 0 : realText.length}
                 </div>

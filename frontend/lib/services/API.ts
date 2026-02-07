@@ -10,9 +10,29 @@ export async function API({query, variables}: {
     const headersList = await headers();
     const authorization = headersList.get('X-Auth-Request-Access-Token');
     const URL = `${keystone}/api/graphql`;
-    return fetch(URL, {
+    return authorization ? await fetch(URL, {
         method: 'POST', body: JSON.stringify({query, variables}), headers: {
             'Authorization': `Bearer ${authorization}`, 'Content-Type': 'application/json'
+        }
+    })
+        .then(async (payload) => {
+            if (payload.status >= 200 && payload.status < 300) {
+                return payload.json();
+            } else {
+                logger
+                    .child({
+                        'type': 'GraphQL Query error', 'status': payload.status, variables
+                    })
+                    .error(payload.statusText);
+                return payload.statusText;
+            }
+        })
+        .catch((err) => {
+            logger.error(err);
+            return err.code;
+        }) : await fetch(URL, {
+        method: 'POST', body: JSON.stringify({query, variables}), headers: {
+            'Content-Type': 'application/json'
         }
     })
         .then(async (payload) => {

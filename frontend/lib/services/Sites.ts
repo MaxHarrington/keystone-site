@@ -29,7 +29,6 @@ export default class Sites {
         }
         `;
         const res = await API({query});
-        console.log(res)
         if (res?.data?.metadata == null) return new Sites({active: false});
         const {data: {metadata: {title, tagline, description, keywords}}} = res;
         return new Sites({active: true, title, tagline, description, keywords});

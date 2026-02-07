@@ -63,7 +63,7 @@ export default function CommentEditor({comment}: {comment?: Comment}) {
                 from-transparent via-transparent ${percentParameters[percentLength]}
                 to-[0%] border-5 rounded-full h-10 w-10`}
             >
-                <div className="text-center text-xs pt-2 bg-red-50 w-8 h-8 rounded-full mx-auto ml-[9.5%] mt-[9.45%]">
+                <div className="text-center text-xs pt-2 bg-red-50 w-8 h-8 rounded-full mx-auto ml-1 mt-1">
                     {/* Empty string char code is equal to 10, sets length properly */}
                     {realText.charCodeAt(0) === 10 ? 0 : realText.length}
                 </div>

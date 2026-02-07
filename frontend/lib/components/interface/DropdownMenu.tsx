@@ -133,17 +133,9 @@ export default function DropdownMenu({session}: { session?: User }) {
         </Menu>
         {/* <Search /> */}
         {hasSession
-            ? <Link href={'/'}
-                    className='z-10 text-white gap-1 flex flex-row hover:bg-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 shadow-xl border-2 border-red-400 bottom-[1.9rem] lg:bottom-[4.5rem] rounded-full left-[7.25rem] lg:left-[10.1rem] xl:left-[11rem] 2xl:left-[12rem] fixed bg-red-500 p-3 px-5 text-lg font-bold'>
-                <div>
-                    <ChatBubbleOvalLeftEllipsisIcon className='mt-[0.12rem]' width={28} height={28}/>
-                </div>
-                <div className={`${sans.className} ml-[0.495rem] my-auto`}>
-                    Discussions
-                </div>
-            </Link>
+            ? <></>
             : <Link href={navigation.join}
-                    className='z-10 text-white gap-1 flex flex-row hover:bg-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 shadow-xl border-2 border-red-400 bottom-[1.9rem] lg:bottom-[4.5rem] rounded-full left-[11.8rem] lg:left-44 xl:left-[17.8rem] 2xl:left-[21rem] fixed bg-red-500 p-3 px-5 text-lg font-bold'>
+                    className='lg:hidden z-10 text-white gap-1 flex flex-row hover:bg-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 shadow-xl border-2 border-red-400 bottom-[1.9rem] lg:bottom-[4.5rem] rounded-full left-[11.8rem] lg:left-44 xl:left-[17.8rem] 2xl:left-[21rem] fixed bg-red-500 p-3 px-5 text-lg font-bold'>
                 <div>
                     <EnvelopeIcon className='mt-[0.15rem]' width={24} height={24}/>
                 </div>

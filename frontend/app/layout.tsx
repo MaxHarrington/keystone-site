@@ -43,7 +43,7 @@ export default async function Layout({children}: { children: ReactNode }) {
                             <i className={`font-medium text-red-50 mr-1`}>jonc</i>
                             <i className={`text-amber-400`}>tures</i>
                         </div>
-                        <div className={`${sans.className} place-content-start lg:mt-2 text-[1rem] font-medium ml-24 lg:ml-28 text-red-100`}>
+                        <div className={`${sans.className} place-content-start text-[1rem] font-medium ml-24 lg:ml-28 text-red-100`}>
                             /kɔ̃.ʒɔ̃k.tyʁ/
                         </div>
                     </>
@@ -51,7 +51,7 @@ export default async function Layout({children}: { children: ReactNode }) {
                         {tagline}
                     </div>
                 </Link>
-                <div className={`mt-4 lg:mt-3 fixed right-12`}>
+                <div className={`mt-1 mr-2 lg:mt-3 lg:fixed lg:right-4`}>
                     { name !== 'Invalid username'
                         ? <Link href={`/account`} className={`${sans.className} grid place-content-center 
                         text-red-600 shadow-inner w-[55px] h-[55px] rounded-full bg-white text-3xl font-medium`}>

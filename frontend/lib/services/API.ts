@@ -28,7 +28,6 @@ export async function API({query, variables}: {
             }
         })
         .catch((err) => {
-            logger.error(err);
             return err.code;
         }) : await fetch(URL, {
         method: 'POST', body: JSON.stringify({query, variables}), headers: {

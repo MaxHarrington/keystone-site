@@ -107,13 +107,13 @@ export const Post = list({
             field: graphql.field({
                 type: graphql.Boolean,
                 async resolve(source, {}, context) {
-                    if (!context.session?.userId) return false;
+                    if (!context.session?.id) return false;
                     const postList = await context.db.Post.findMany({
                         where: {
                             id: {equals: source.id}, likes: {
                                 some: {
                                     id: {
-                                        equals: context.session?.userId
+                                        equals: context.session?.id
                                     }
                                 }
                             }

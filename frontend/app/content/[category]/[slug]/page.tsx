@@ -50,8 +50,8 @@ export default async function ContentDisplay({params}: {params: {category: strin
         if (!post) notFound();
         return <main>
             <DropdownMenu session={session} />
-            <div className={`lg:w-[70vw] lg:mr-0 lg:ml-auto`}>
-                <div className={`flex flex-col lg:h-[24vh] mt-8 lg:mt-1 mb-5 place-content-center w-[90%] max-w-[1080px] mx-auto`}>
+            <div className={`lg:w-[70vw] lg:mr-0 lg:ml-auto mt-12`}>
+                <div className={`flex flex-col lg:h-[24vh] mt-8 lg:mt-1 mb-5 place-content-center w-[80%] max-w-[900px] mx-auto`}>
                     <div className={`${serif.className} text-4xl`}>{post.title}</div>
                     <div className={`${serif.className} text-2xl font-light mt-2`}>{post.subtitle}</div>
                     <div className={`text-xl font-light mt-4 md:mt-12`}>{post.description}</div>

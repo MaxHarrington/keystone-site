@@ -12,7 +12,7 @@ import {Tag} from "@/services/Tags";
 export default async function Post({post}: { post: PostType }) {
     const session = await getSession();
     return <>
-        <div key={post.slug} className={`min-w-[350px] max-w-[1080px] px-2 py-3 border lg:rounded-xl 
+        <div key={post.slug} className={`min-w-[350px] max-w-[960px] px-2 py-3 border lg:rounded-xl 
         hover:border-red-700 hover:delay-100 hover:duration-100 hover:transition-all hover:ease-in-out 
         border-transparent hover:cursor-pointer hover:bg-red-600 hover:shadow-inner`}>
             <div key={post.slug} className='flex flex-row w-[98%]'>

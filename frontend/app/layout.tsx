@@ -35,23 +35,23 @@ export default async function Layout({children}: { children: ReactNode }) {
         <html lang="en">
         <body className={'bg-[#a82f21]'}>
         <div className={`grid h-screen w-[99.999%] overscroll-contain text-red-50`}>
-            <div className={`flex flex-row place-content-between w-[94%] mx-auto mt-5`}>
-                <Link className={`${serif.className}`} href="/">
+            <div className={`flex flex-row place-content-between w-[97%] mx-auto mt-3 lg:mt-8`}>
+                <Link className={`${serif.className} grid lg:fixed`} href="/">
                     <>
-                        <div className={`text-5xl lg:text-[3.4rem] mb-1.5`}>
+                        <div className={`text-5xl lg:text-[3.4rem] lg:mb-1.5`}>
                             <i className={`text-amber-400 mr-1`}>con</i>
                             <i className={`font-medium text-red-50 mr-1`}>jonc</i>
                             <i className={`text-amber-400`}>tures</i>
                         </div>
-                        <div className={`${sans.className} mt-2 place-content-start lg:mt-2 text-[1rem] font-medium lg:ml-32 text-red-100`}>
-                            /kɔ̃.ʒɔ̃k.tyʁ/ — French noun (pl., fem.)
+                        <div className={`${sans.className} place-content-start lg:mt-2 text-[1rem] font-medium ml-24 lg:ml-28 text-red-100`}>
+                            /kɔ̃.ʒɔ̃k.tyʁ/
                         </div>
                     </>
                     <div className={`${sans.className} hidden md:inline text-[1.125rem] ml-1 text-red-50`}>
                         {tagline}
                     </div>
                 </Link>
-                <div className={`mt-4 lg:mt-3`}>
+                <div className={`mt-4 lg:mt-3 fixed right-12`}>
                     { name !== 'Invalid username'
                         ? <Link href={`/account`} className={`${sans.className} grid place-content-center 
                         text-red-600 shadow-inner w-[55px] h-[55px] rounded-full bg-white text-3xl font-medium`}>

@@ -147,7 +147,7 @@ export default function DropdownMenu({session}: { session?: User }) {
                 <div>
                     <EnvelopeIcon className='mt-[0.15rem]' width={24} height={24}/>
                 </div>
-                <div className={`${sans.className} ml-2 my-auto`}>
+                <div className={`${sans.className} my-auto`}>
                     Join Now
                 </div>
             </Link>}

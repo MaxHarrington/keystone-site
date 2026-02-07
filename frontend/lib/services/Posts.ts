@@ -138,14 +138,15 @@ export default class Posts {
         }
         `;
         const where = {id: this.post?.id};
-        if (!this.session.user?.id) {
+        if (!this.session.id) {
             return undefined;
         }
         const data = {
-            likes: this.post.isLiked ? {disconnect: {id: this.session.user.id}} : {connect: {id: this.session.user.id}}
+            likes: this.post.isLiked ? {disconnect: {id: this.session.id}} : {connect: {id: this.session.id}}
         };
         const variables = {where, data}
         const liked = await API({query, variables});
+        console.log(liked);
         if (liked?.errors) {
             logger.error(liked.errors);
             return undefined;

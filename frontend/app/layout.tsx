@@ -34,7 +34,7 @@ export default async function Layout({children}: { children: ReactNode }) {
     return <>
         <html lang="en">
         <body className={'bg-[#a82f21]'}>
-        <div className={`grid h-screen w-[99.999%] overscroll-contain text-red-50`}>
+        <div className={`grid h-screen w-screen overscroll-contain text-red-50`}>
             <div className={`flex flex-row place-content-between w-[97%] mx-auto mt-3 lg:mt-8`}>
                 <Link className={`${serif.className} grid lg:fixed`} href="/">
                     <>

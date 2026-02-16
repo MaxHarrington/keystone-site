@@ -8,7 +8,6 @@ import {
     SquaresPlusIcon,
     TagIcon,
     EnvelopeIcon,
-    ChatBubbleOvalLeftEllipsisIcon,
     MagnifyingGlassIcon,
     WrenchIcon,
     HomeIcon,
@@ -135,7 +134,7 @@ export default function DropdownMenu({session}: { session?: User }) {
         {hasSession
             ? <></>
             : <Link href={navigation.join}
-                    className='lg:hidden z-10 text-white gap-1 flex flex-row hover:bg-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 shadow-xl border-2 border-red-400 bottom-[1.9rem] lg:bottom-[4.5rem] rounded-full left-[11.8rem] lg:left-44 xl:left-[17.8rem] 2xl:left-[21rem] fixed bg-red-500 p-3 px-5 text-lg font-bold'>
+                    className='lg:hidden z-10 text-white gap-1 flex flex-row hover:bg-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 shadow-xl border-2 border-red-400 bottom-[1.9rem] lg:bottom-[4.5rem] rounded-full left-[22.5%] lg:left-44 xl:left-[17.8rem] 2xl:left-[21rem] fixed bg-red-500 p-3 px-5 text-lg font-bold'>
                 <div>
                     <EnvelopeIcon className='mt-[0.15rem]' width={24} height={24}/>
                 </div>

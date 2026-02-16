@@ -61,9 +61,9 @@ export default function CommentEditor({comment}: {comment?: Comment}) {
             <div
                 className={`bg-[conic-gradient(from_180deg,var(--tw-gradient-stops))] 
                 from-transparent via-transparent ${percentParameters[percentLength]}
-                to-[0%] border-5 rounded-full h-[38px] w-[38px]`}
+                to-[0%] border-6 rounded-full h-[39px] w-[39px]`}
             >
-                <div className="text-center text-xs pt-2 bg-red-50 w-[31px] h-[31px] rounded-full mx-auto ml-[3.82px] mt-[3.15px]">
+                <div className="text-center text-xs pt-2 bg-red-50 w-[30px] h-[30px] rounded-full mx-auto ml-[3.7px] mt-[3.3px]">
                     {/* Empty string char code is equal to 10, sets length properly */}
                     {realText.charCodeAt(0) === 10 ? 0 : realText.length}
                 </div>

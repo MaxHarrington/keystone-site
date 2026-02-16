@@ -11,10 +11,36 @@
 		HTML 503
 }
 
+(frontend) {
+	reverse_proxy {$FRONTEND_INTERNAL_URL} :9999 {
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-Uri {uri}
+		lb_policy first
+		lb_try_duration 1s
+		fail_duration 5s
+		transport http {
+		  dial_timeout 500ms
+		}
+	}
+}
+
+(backend) {
+	reverse_proxy {$BACKEND_INTERNAL_URL} :9999 {
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-Uri {uri}
+		lb_policy first
+		lb_try_duration 1s
+		fail_duration 5s
+		transport http {
+			dial_timeout 500ms
+		}
+	}
+}
+
 # NextJS Frontend
 {$FRONTEND_URL} {
 	handle /oauth2/* {
-		 reverse_proxy {$OAUTH2_PROXY_FRONTEND_INTERNAL_URL} {
+		 reverse_proxy {$OAUTH2_PROXY_FRONTEND_INTERNAL_URL} :9999 {
 			  header_up X-Real-IP {remote_host}
 			  header_up X-Forwarded-Uri {uri}
 		 }
@@ -34,31 +60,27 @@
         }
 	}
 
-	handle {
-        forward_auth {$OAUTH2_PROXY_FRONTEND_INTERNAL_URL} {
-           uri /oauth2/auth
-           header_up X-Real-IP {remote_host}
-           copy_headers X-Auth-Request-User X-Auth-Request-Email X-Auth-Request-Access-Token
-           copy_headers X-Auth-Request-Preferred-Username X-Auth-Request-Groups
-       }
-    }
+    handle {
+		forward_auth {$OAUTH2_PROXY_FRONTEND_INTERNAL_URL} {
+			uri /oauth2/auth
+			header_up X-Real-IP {remote_host}
+			copy_headers X-Auth-Request-User X-Auth-Request-Email X-Auth-Request-Access-Token
+			copy_headers X-Auth-Request-Preferred-Username X-Auth-Request-Groups
 
-    reverse_proxy {$FRONTEND_INTERNAL_URL} :9999 {
-      header_up X-Real-IP {remote_host}
-      header_up X-Forwarded-Uri {uri}
-      lb_policy first
-      lb_try_duration 1s
-      fail_duration 5s
-      transport http {
-          dial_timeout 500ms
-      }
-    }
+			@error status 401
+			handle_response @error {
+				import frontend
+			}
+	   }
+   }
+
+   import frontend
 }
 
 # Keystone Manager
 {$BACKEND_URL} {
 	handle /oauth2/* {
-		 reverse_proxy {$OAUTH2_PROXY_BACKEND_INTERNAL_URL} {
+		 reverse_proxy {$OAUTH2_PROXY_BACKEND_INTERNAL_URL} :9999 {
 			  header_up X-Real-IP {remote_host}
 			  header_up X-Forwarded-Uri {uri}
 		 }
@@ -70,10 +92,15 @@
 			header_up X-Real-IP {remote_host}
 			copy_headers X-Auth-Request-User X-Auth-Request-Email
 			copy_headers X-Auth-Request-Preferred-Username X-Auth-Request-Groups
+
+			@error status 401
+			handle_response @error {
+				import backend
+			}
 		}
 	}
 
-	handle {
+	handle /* {
 	   forward_auth {$OAUTH2_PROXY_BACKEND_INTERNAL_URL} {
 		   uri /oauth2/auth
 		   header_up X-Real-IP {remote_host}
@@ -83,26 +110,19 @@
 		   @error status 401
 		   handle_response @error {
 			  redir * /oauth2/sign_in?rd={scheme}://{host}{uri}
-		  }
+		   }
 	   }
    }
 
-   reverse_proxy {$BACKEND_INTERNAL_URL} {
-		header_up X-Real-IP {remote_host}
-		header_up X-Forwarded-Uri {uri}
-		lb_policy first
-		lb_try_duration 1s
-		fail_duration 5s
-		transport http {
-			dial_timeout 500ms
-		}
-	}
+   import backend
 }
 
 # Keycloak
 {$KEYCLOAK_URL} {
 	handle {
 	   reverse_proxy {$KEYCLOAK_INTERNAL_URL} :9999 {
+         header_up X-Real-IP {remote_host}
+		 header_up X-Forwarded-Uri {uri}
 		 lb_policy first
 		 lb_try_duration 1s
 		 fail_duration 5s

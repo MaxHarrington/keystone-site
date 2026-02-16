@@ -37,7 +37,7 @@ export default async function ContentList({params, searchParams}:
         const {posts} = await Posts.initialize({take});
         const {total} = await Posts.initialize({take: 20000});
         return <main>
-            <div className="flex flex-col gap-y-8 md:gap-y-9 lg:gap-y-10 lg:ml-[8%] xl:ml-[20%] mt-10 mb-8">
+            <div className="flex flex-col gap-y-8 md:gap-y-9 lg:gap-y-10 lg:w-[73vw] xl:w-[64vw] lg:ml-[34%] mt-10 mb-8">
                 {posts?.map((post: PostType) => {
                     return <Post
                         key={post.slug}

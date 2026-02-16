@@ -1,4 +1,3 @@
-import slugify from 'slugify';
 import type {Context} from '.keystone/types';
 import {User} from '@prisma/client';
 

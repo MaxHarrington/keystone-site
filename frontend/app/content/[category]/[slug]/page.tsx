@@ -4,7 +4,6 @@ import Posts from "@/services/Posts";
 import Posters from "@/services/Posters";
 import Tags from "@/services/Tags";
 import {serif} from "@fonts";
-import DropdownMenu from "@/components/interface/DropdownMenu";
 import getSession from "@/components/actions/getSession";
 import CommentEditor from "@/components/interface/CommentEditor";
 
@@ -49,7 +48,6 @@ export default async function ContentDisplay({params}: {params: {category: strin
         console.log(post?.comments);
         if (!post) notFound();
         return <main>
-            <DropdownMenu session={session} />
             <div className={`lg:w-[70vw] lg:mr-0 lg:ml-[28%] mt-12`}>
                 <div className={`flex flex-col mt-8 lg:mt-1 mb-5 place-content-center w-[80%] max-w-[900px] mx-auto`}>
                     <div className={`${serif.className} text-4xl`}>{post.title}</div>
@@ -74,7 +72,6 @@ export default async function ContentDisplay({params}: {params: {category: strin
         const {poster} = await Posters.initialize({path: `/content/posters/${slug}`});
         if (!poster) notFound();
         return <main>
-            <DropdownMenu session={session} />
             <div className={`grid`}>
                 <div className={`${serif.className}`}>{poster.name}</div>
                 <div className={`${serif.className}`}>{poster.oneLiner}</div>
@@ -84,7 +81,6 @@ export default async function ContentDisplay({params}: {params: {category: strin
         const {tag} = await Tags.initialize({path: `/content/tags/${slug}`});
         if (!tag) notFound();
         return <main>
-            <DropdownMenu session={session} />
             ghi
         </main>;
     } else notFound();

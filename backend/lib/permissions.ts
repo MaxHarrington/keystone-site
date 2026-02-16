@@ -16,16 +16,6 @@ export function sessionIsAdmin({session}: { session?: User }) {
     return Boolean(session?.admin);
 }
 
-export function canViewToken({session}: { session?: User }) {
-    if (sessionIsAdmin({session})) {
-        return true;
-    } else if (session?.id) {
-        return {
-            id: { equals: session.id }
-        };
-    } else return false;
-}
-
 export function canViewUser({session}: { session?: User }) {
     if (sessionIsAdmin({session})) {
         return true;

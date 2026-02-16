@@ -1,7 +1,6 @@
 // import Form from 'next/form'
 import getSession from "@/components/actions/getSession";
 import {serif} from "@fonts";
-import DropdownMenu from "@/components/interface/DropdownMenu";
 
 export default async function AccountManager() {
     const session = await getSession();
@@ -12,7 +11,6 @@ export default async function AccountManager() {
     if (typeof session?.updates === 'string') updates = session.updates;
     return <>
         <main className={`flex flex-col lg:max-w-[50%] h-[70vh] lg:ml-[20%] lg:mr-[8%] mt-16`}>
-            <DropdownMenu session={session} />
             <div className={`${serif.className} text-center text-2xl place-self-center`}>
                 Welcome back, {name}.
             </div>

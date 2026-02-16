@@ -7,6 +7,7 @@ import {frontend, navigation} from "@constants";
 import {sans, serif} from '@fonts';
 import type { Metadata } from 'next'
 import '@/app/globals.css';
+import DropdownMenu from "@/components/interface/DropdownMenu";
 
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -34,24 +35,24 @@ export default async function Layout({children}: { children: ReactNode }) {
     return <>
         <html lang="en">
         <body className={'bg-[#a82f21]'}>
-        <div className={`grid h-screen w-screen overscroll-contain text-red-50`}>
-            <div className={`flex flex-row place-content-between w-[97%] mx-auto mt-3 lg:mt-8`}>
+        <div className={`grid h-screen w-[99.9%] overscroll-contain text-red-50`}>
+            <div className={`flex flex-row place-content-between w-[97%] mx-auto mt-2 lg:mt-3`}>
                 <Link className={`${serif.className} grid lg:fixed`} href="/">
                     <>
-                        <div className={`text-5xl lg:text-[3.4rem] lg:mb-1.5`}>
+                        <div className={`text-[2.7rem] lg:text-[3.4rem]`}>
                             <i className={`text-amber-400 mr-1`}>con</i>
                             <i className={`font-medium text-red-50 mr-1`}>jonc</i>
                             <i className={`text-amber-400`}>tures</i>
                         </div>
-                        <div className={`${sans.className} place-content-start text-[1rem] font-medium ml-24 lg:ml-28 text-red-100`}>
-                            /kɔ̃.ʒɔ̃k.tyʁ/
+                        <div className={`${sans.className} lg:fixed invisible md:visible lg:text-[0.92rem] font-medium top-[4.75rem] left-36 text-red-100`}>
+                            /kɔ̃.ʒɔ̃k.tyʁ/ — French noun (plural)
                         </div>
                     </>
-                    <div className={`${sans.className} hidden md:inline text-[1.125rem] ml-1 text-red-50`}>
+                    <div className={`${sans.className} hidden md:inline text-[0.9rem] lg:text-[1.125rem] ml-1 text-red-50`}>
                         {tagline}
                     </div>
                 </Link>
-                <div className={`mt-1 mr-2 lg:mt-3 lg:fixed lg:right-4`}>
+                <div className={`mt-1 mr-4 lg:mt-3 lg:fixed lg:right-4`}>
                     { name !== 'Invalid username'
                         ? <Link href={`/account`} className={`${sans.className} grid place-content-center 
                         text-red-600 shadow-inner w-[55px] h-[55px] rounded-full bg-white text-3xl font-medium`}>
@@ -65,6 +66,7 @@ export default async function Layout({children}: { children: ReactNode }) {
                 </div>
             </div>
             <div className={`${sans.className} xl:max-w-[90%] h-min-[76%] grid`}>
+                <DropdownMenu session={session}/>
                 {children}
             </div>
             {/* <ConsentBanner /> */}
